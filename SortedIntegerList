@@ -1,0 +1,64 @@
+import java.util.LinkedList;
+import java.util.ListIterator;
+
+public class SortedIntegerList {
+    private LinkedList<Integer> list;
+    private boolean allowDuplicates;
+
+    public SortedIntegerList(boolean allowDuplicates) {
+        this.list = new LinkedList<>();
+        this.allowDuplicates = allowDuplicates;
+    }
+
+    public void add(int number) {
+        if (!allowDuplicates && list.contains(number)) {
+            return;
+        }
+        ListIterator<Integer> iterator = list.listIterator();
+        while (iterator.hasNext()) {
+            int next = iterator.next();
+            if (number < next) {
+                iterator.previous();
+                iterator.add(number);
+                return;
+            }
+        }
+        list.add(number);
+    }
+
+    public void remove(int number) {
+        ListIterator<Integer> iterator = list.listIterator();
+        while (iterator.hasNext()) {
+            int next = iterator.next();
+            if (next == number) {
+                iterator.remove();
+                return;
+            }
+            if (next > number) {
+                return;
+            }
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SortedIntegerList) {
+            SortedIntegerList other = (SortedIntegerList) obj;
+            if (allowDuplicates != other.allowDuplicates) {
+                return false;
+            }
+            if (list.size() != other.list.size()) {
+                return false;
+            }
+            ListIterator<Integer> iterator1 = list.listIterator();
+            ListIterator<Integer> iterator2 = other.list.listIterator();
+            while (iterator1.hasNext() && iterator2.hasNext()) {
+                if (!iterator1.next().equals(iterator2.next())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+}
